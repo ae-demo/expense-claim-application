@@ -26,26 +26,26 @@ approves or rejects each with a comment.
 ## User Stories
 
 1. As an Employee, I want to submit an expense claim with one or more receipt
- photos, so that I can request reimbursement for a business expense.
+photos, so that I can request reimbursement for a business expense.
 2. As an Employee, I want the amount, date, vendor and category to be
- automatically read off my receipt photo, so that I don't have to type them
- in myself.
+automatically read off my receipt photo, so that I don't have to type them
+in myself.
 3. As an Employee, I want to review and correct the auto-extracted details
- before I submit, so that my claim is accurate.
+before I submit, so that my claim is accurate.
 4. As an Employee, I want to view the status of each claim I've submitted, so
- that I know whether it's pending, approved, or rejected.
+that I know whether it's pending, approved, or rejected.
 5. As an Employee, I want to edit or withdraw a claim while it is still
- pending, so that I can fix a mistake or cancel it before it's reviewed.
+pending, so that I can fix a mistake or cancel it before it's reviewed.
 6. As an Employee, I want to see a history of all my past claims, so that I
- can track my own spending over time.
+can track my own spending over time.
 7. As an Employee, I want to be notified when a claim's status changes, so
- that I know the outcome without having to check manually.
+that I know the outcome without having to check manually.
 8. As a Manager, I want to see a queue of expense claims submitted by my
- direct reports, so that I know what's waiting on my review.
+direct reports, so that I know what's waiting on my review.
 9. As a Manager, I want to approve or reject a claim with a comment, so that
- the employee understands the decision.
+the employee understands the decision.
 10. As a Manager, I want to be notified when a new claim needs my approval, so
- that I can act on it promptly.
+that I can act on it promptly.
 
 ## Product Decisions
 
@@ -67,13 +67,13 @@ employee's manager, who approves or rejects it. There is no second
 Actual payout happens outside the app (e.g. via payroll); the app does not
 integrate a payments capability.
 - Currency: claims are recorded in a single, organization-wide currency
-(USD). *assumed*
+(USD).
 - Expense categories: claims are categorized from a fixed set (Travel, Meals,
-Accommodation, Office Supplies, Other). *assumed*
+Accommodation, Office Supplies, Other).
 - Claim editing: an employee may edit or withdraw a claim only while it is
-still pending; once approved or rejected it is locked. *assumed*
+still pending; once approved or rejected it is locked.
 - Manager visibility: a manager sees only claims submitted by their own
-direct reports, not the whole organization. *assumed*
+direct reports, not the whole organization.
 - Notification channel: notifications are sent by email only (not SMS).
 *assumed*
 
