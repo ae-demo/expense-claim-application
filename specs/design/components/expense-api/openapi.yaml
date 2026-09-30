@@ -15,7 +15,7 @@ components:
           tokenUrl: /oauth2/token
           scopes:
             claims:read: The caller's own claims
-            claims:submit: Create a claim and request receipt upload/view URLs
+            claims:submit: Create a claim and upload receipt photos
             claims:edit: Edit a pending claim
             claims:withdraw: Withdraw a pending claim
             claims:read-team: Claims submitted by the caller's direct reports
@@ -52,12 +52,24 @@ components:
           items: { $ref: '#/components/schemas/Receipt' }
     Receipt:
       type: object
-      required: [id, claimId, imageUrl]
+      required: [id, claimId, contentType]
       properties:
         id: { type: string }
-        claimId: { type: string }
-        imageUrl: { type: string }
+        claimId: { type: string, nullable: true, description: null until attached to a submitted claim }
+        contentType: { type: string, enum: [image/jpeg, image/png] }
         extracted: { type: boolean }
+    ReceiptUpload:
+      type: object
+      required: [contentType, data]
+      properties:
+        contentType: { type: string, enum: [image/jpeg, image/png] }
+        data: { type: string, format: byte, description: base64-encoded image bytes }
+    ReceiptImage:
+      type: object
+      required: [contentType, data]
+      properties:
+        contentType: { type: string, enum: [image/jpeg, image/png] }
+        data: { type: string, format: byte, description: base64-encoded image bytes }
     ExpenseClaimCreate:
       type: object
       required: [category, amount, currency, expenseDate, vendor]
@@ -82,17 +94,6 @@ components:
       required: [comment]
       properties:
         comment: { type: string }
-    UploadUrlResponse:
-      type: object
-      required: [receiptId, uploadUrl]
-      properties:
-        receiptId: { type: string }
-        uploadUrl: { type: string }
-    ViewUrlResponse:
-      type: object
-      required: [viewUrl]
-      properties:
-        viewUrl: { type: string }
     WeeklyLimit:
       type: object
       properties:
@@ -211,19 +212,25 @@ paths:
         '204': { description: Claim withdrawn }
         '400': { $ref: '#/components/responses/BadRequest' }
         '404': { $ref: '#/components/responses/NotFound' }
-  /me/claims/receipts/upload-url:
+  /me/claims/receipts:
     post:
-      operationId: requestReceiptUploadUrl
-      summary: Get a presigned URL to upload a receipt photo
+      operationId: uploadReceipt
+      summary: Upload a receipt photo, ahead of attaching it to a claim
       security:
         - oauth2: [claims:submit]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReceiptUpload' }
       responses:
-        '200':
-          description: A presigned S3 upload URL and the new receipt's id
+        '201':
+          description: The stored receipt's id and metadata
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/UploadUrlResponse' }
-  /me/claims/{claimId}/receipts/{receiptId}/view-url:
+              schema: { $ref: '#/components/schemas/Receipt' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+  /me/claims/{claimId}/receipts/{receiptId}:
     parameters:
       - name: claimId
         in: path
@@ -234,16 +241,16 @@ paths:
         required: true
         schema: { type: string }
     get:
-      operationId: getReceiptViewUrl
-      summary: Get a presigned URL to view a receipt photo
+      operationId: getReceiptImage
+      summary: Get a receipt photo's image data
       security:
         - oauth2: [claims:read]
       responses:
         '200':
-          description: A presigned S3 view URL
+          description: The receipt's image data
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/ViewUrlResponse' }
+              schema: { $ref: '#/components/schemas/ReceiptImage' }
         '404': { $ref: '#/components/responses/NotFound' }
   /me/team/weekly-limit:
     get:

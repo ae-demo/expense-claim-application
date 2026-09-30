@@ -7,7 +7,7 @@
       "description": "Expense claims, their receipts, and their approval",
       "actions": [
         { "handle": "read", "description": "The caller's own claims" },
-        { "handle": "submit", "description": "Create a claim and request receipt upload/view URLs" },
+        { "handle": "submit", "description": "Create a claim and upload receipt photos" },
         { "handle": "edit", "description": "Edit a pending claim" },
         { "handle": "withdraw", "description": "Withdraw a pending claim" },
         { "handle": "read-team", "description": "Claims submitted by the caller's direct reports" },
