@@ -1,0 +1,16 @@
+{
+  "name": "receipt-agent",
+  "type": "ai-agent",
+  "version": "0.1.0",
+  "language": "TypeScript",
+  "buildpack": "docker",
+  "appPath": "receipt-agent",
+  "entrypoint": "deployment/ai-agent",
+  "exposure": "internet",
+  "dependencies": [
+    { "kind": "platform-resource", "name": "thunder-auth", "resourceType": "thunder-app" }
+  ],
+  "description": "Reads an uploaded receipt photo and returns extracted amount, date, vendor and category so the Employee can review and correct them before submitting a claim. Stores no conversation history beyond the single extraction turn and holds no claim data itself — expense-api is the system of record.",
+  "stories": [2],
+  "skillsPinned": ["agent-building"]
+}

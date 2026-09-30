@@ -1,0 +1,26 @@
+# Submit an expense claim
+
+An Employee photographs a receipt, has its details auto-extracted, reviews
+and corrects them, and submits the claim for their manager's approval.
+
+```mermaid
+sequenceDiagram
+    actor Employee
+    participant expense-webapp
+    participant receipt-agent
+    participant expense-api
+
+    Employee->>expense-webapp: upload receipt photo
+    expense-webapp->>receipt-agent: extract fields (photo attachment)
+    receipt-agent-->>expense-webapp: amount, date, vendor, category
+    Employee->>expense-webapp: review and correct fields
+    Employee->>expense-webapp: submit claim
+    expense-webapp->>expense-api: request receipt upload URL
+    expense-api-->>expense-webapp: presigned S3 URL
+    expense-webapp->>expense-api: create claim (fields, receipt ref)
+    alt missing required field
+        expense-api-->>expense-webapp: refused
+    else
+        expense-api-->>expense-webapp: created (pending)
+    end
+```

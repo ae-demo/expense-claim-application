@@ -1,0 +1,18 @@
+{
+  "name": "expense-webapp",
+  "type": "web-application",
+  "version": "0.1.0",
+  "language": "TypeScript",
+  "buildpack": "docker",
+  "appPath": "expense-webapp",
+  "entrypoint": "deployment/web-application",
+  "exposure": "internet",
+  "dependencies": [
+    { "kind": "component", "name": "expense-api" },
+    { "kind": "component", "name": "receipt-agent" },
+    { "kind": "platform-resource", "name": "thunder-auth", "resourceType": "thunder-app" }
+  ],
+  "description": "The Employee and Manager web app: submitting expense claims with receipt photos (auto-extracted via receipt-agent), tracking and editing/withdrawing pending claims, claim history, and the Manager's approval queue. Holds no business data itself — everything is read/written through expense-api and receipt-agent.",
+  "stories": [1, 2, 3, 4, 5, 6, 7, 8],
+  "skillsPinned": ["wireframes", "react-webapp", "oxygen-ui-design-system", "thunder-authentication"]
+}
