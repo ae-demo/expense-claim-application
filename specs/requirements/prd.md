@@ -74,7 +74,7 @@ Accommodation, Office Supplies, Other).
 still pending; once approved or rejected it is locked.
 - Manager visibility: a manager sees only claims submitted by their own
 direct reports, not the whole organization.
-- Notification channel: notifications are sent by email only (not SMS).
+- Notification channel: notifications are sent by email only (not SMS).  
 *assumed*
 
 ## Out of Scope
