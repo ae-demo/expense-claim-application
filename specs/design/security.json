@@ -1,0 +1,42 @@
+{
+  "version": 3,
+  "permissions": [
+    {
+      "resource": "claims",
+      "component": "expense-api",
+      "description": "Expense claims, their receipts, and their approval",
+      "actions": [
+        { "handle": "read", "description": "The caller's own claims" },
+        { "handle": "submit", "description": "Create a claim and request receipt upload/view URLs" },
+        { "handle": "edit", "description": "Edit a pending claim" },
+        { "handle": "withdraw", "description": "Withdraw a pending claim" },
+        { "handle": "read-team", "description": "Claims submitted by the caller's direct reports" },
+        { "handle": "approve", "description": "Approve a direct report's submitted claim" },
+        { "handle": "reject", "description": "Reject a direct report's submitted claim" }
+      ]
+    }
+  ],
+  "groups": [],
+  "roles": [
+    {
+      "name": "Employee",
+      "description": "Submits expense claims with receipts, and tracks, edits or withdraws their own pending claims.",
+      "stories": [1, 2, 3, 4, 5, 6],
+      "grants": ["claims:read", "claims:submit", "claims:edit", "claims:withdraw"],
+      "assignTo": ["Employees"]
+    },
+    {
+      "name": "Manager",
+      "description": "Reviews expense claims submitted by their direct reports and approves or rejects each with a comment.",
+      "stories": [7, 8],
+      "grants": ["claims:read-team", "claims:approve", "claims:reject"],
+      "assignTo": ["Managers"]
+    }
+  ],
+  "testUsers": [
+    { "username": "test-employee", "roles": ["Employee"] },
+    { "username": "test-employee-2", "roles": ["Employee"] },
+    { "username": "test-manager", "roles": ["Manager"] },
+    { "username": "test-manager-2", "roles": ["Manager"] }
+  ]
+}

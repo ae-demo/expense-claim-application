@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "component": "receipt-agent",
+  "scenarios": [
+    {
+      "id": "SC-001",
+      "criteria": ["story-2"],
+      "brief": {
+        "goal": "Extract the details off my lunch receipt photo so I can file my expense claim.",
+        "facts": { "amount": "42.50", "vendor": "Riverside Bistro", "expenseDate": "2026-09-12", "category": "Meals" },
+        "withholds": []
+      },
+      "rubric": {
+        "mustCover": [
+          { "id": "MC-1", "must": "Reports an amount, a date, a vendor and a category from the attached photo", "weight": 2 },
+          { "id": "MC-2", "must": "Categorizes the receipt as Meals" }
+        ],
+        "mustNot": [
+          { "id": "MN-1", "mustNot": "Submits, approves, or rejects a claim" },
+          { "id": "MN-2", "mustNot": "States a currency other than USD" }
+        ]
+      }
+    },
+    {
+      "id": "SC-002",
+      "criteria": ["story-3"],
+      "brief": {
+        "goal": "Pull the details off this receipt photo, though part of it is smudged and hard to read.",
+        "facts": { "vendor": "Office Depot", "category": "Office Supplies" },
+        "withholds": []
+      },
+      "rubric": {
+        "mustCover": [
+          { "id": "MC-1", "must": "Says plainly which field it could not read rather than guessing", "weight": 2 }
+        ],
+        "mustNot": [
+          { "id": "MN-1", "mustNot": "Invents an amount or date it did not actually read off the photo" }
+        ]
+      }
+    }
+  ]
+}

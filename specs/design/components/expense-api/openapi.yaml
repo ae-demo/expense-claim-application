@@ -1,2 +1,313 @@
 openapi: 3.0.3
 info:
+  title: Expense API
+  version: 0.1.0
+  description: Expense claims, receipts, and manager approval.
+servers:
+  - url: /
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth2/authorize
+          tokenUrl: /oauth2/token
+          scopes:
+            claims:read: The caller's own claims
+            claims:submit: Create a claim and request receipt upload/view URLs
+            claims:edit: Edit a pending claim
+            claims:withdraw: Withdraw a pending claim
+            claims:read-team: Claims submitted by the caller's direct reports
+            claims:approve: Approve a submitted claim
+            claims:reject: Reject a submitted claim
+  schemas:
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: integer, description: HTTP or application error code }
+        message: { type: string, description: short human-readable label }
+        description: { type: string, description: detailed explanation }
+        moreInfo: { type: string, description: URI to documentation }
+    ExpenseClaim:
+      type: object
+      required: [id, employeeId, category, amount, currency, expenseDate, vendor, status, submittedAt]
+      properties:
+        id: { type: string }
+        employeeId: { type: string }
+        category: { type: string, enum: [Travel, Meals, Accommodation, Office Supplies, Other] }
+        amount: { type: number, format: double }
+        currency: { type: string, enum: [USD] }
+        expenseDate: { type: string, format: date }
+        vendor: { type: string }
+        status: { type: string, enum: [pending, approved, rejected] }
+        reviewerComment: { type: string, nullable: true }
+        submittedAt: { type: string, format: date-time }
+        reviewedAt: { type: string, format: date-time, nullable: true }
+        receipts:
+          type: array
+          items: { $ref: '#/components/schemas/Receipt' }
+    Receipt:
+      type: object
+      required: [id, claimId, imageUrl]
+      properties:
+        id: { type: string }
+        claimId: { type: string }
+        imageUrl: { type: string }
+        extracted: { type: boolean }
+    ExpenseClaimCreate:
+      type: object
+      required: [category, amount, currency, expenseDate, vendor]
+      properties:
+        category: { type: string, enum: [Travel, Meals, Accommodation, Office Supplies, Other] }
+        amount: { type: number, format: double }
+        currency: { type: string, enum: [USD] }
+        expenseDate: { type: string, format: date }
+        vendor: { type: string }
+        receiptIds:
+          type: array
+          items: { type: string }
+    ExpenseClaimUpdate:
+      type: object
+      properties:
+        category: { type: string, enum: [Travel, Meals, Accommodation, Office Supplies, Other] }
+        amount: { type: number, format: double }
+        expenseDate: { type: string, format: date }
+        vendor: { type: string }
+    ClaimDecision:
+      type: object
+      required: [comment]
+      properties:
+        comment: { type: string }
+    UploadUrlResponse:
+      type: object
+      required: [receiptId, uploadUrl]
+      properties:
+        receiptId: { type: string }
+        uploadUrl: { type: string }
+    ViewUrlResponse:
+      type: object
+      required: [viewUrl]
+      properties:
+        viewUrl: { type: string }
+  responses:
+    NotFound:
+      description: The resource does not exist, or does not belong to the caller
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    BadRequest:
+      description: The request is invalid
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+security:
+  - oauth2: []
+paths:
+  /me/claims:
+    get:
+      operationId: listMyClaims
+      summary: The caller's own claims
+      security:
+        - oauth2: [claims:read]
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20, maximum: 100 }
+        - name: offset
+          in: query
+          schema: { type: integer, default: 0 }
+        - name: status
+          in: query
+          schema: { type: string, enum: [pending, approved, rejected] }
+      responses:
+        '200':
+          description: A page of the caller's claims
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, data]
+                properties:
+                  count: { type: integer, description: total matching items }
+                  next: { type: string, nullable: true, description: relative URI of the next page }
+                  previous: { type: string, nullable: true, description: relative URI of the previous page }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/ExpenseClaim' }
+    post:
+      operationId: submitExpenseClaim
+      summary: Submit a new expense claim
+      security:
+        - oauth2: [claims:submit]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExpenseClaimCreate' }
+      responses:
+        '201':
+          description: Claim created, pending review
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExpenseClaim' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+  /me/claims/{claimId}:
+    parameters:
+      - name: claimId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      operationId: getMyClaim
+      summary: One of the caller's own claims
+      security:
+        - oauth2: [claims:read]
+      responses:
+        '200':
+          description: The claim
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExpenseClaim' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      operationId: editMyClaim
+      summary: Edit a pending claim
+      security:
+        - oauth2: [claims:edit]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExpenseClaimUpdate' }
+      responses:
+        '200':
+          description: Updated claim
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExpenseClaim' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      operationId: withdrawMyClaim
+      summary: Withdraw a pending claim
+      security:
+        - oauth2: [claims:withdraw]
+      responses:
+        '204': { description: Claim withdrawn }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /me/claims/receipts/upload-url:
+    post:
+      operationId: requestReceiptUploadUrl
+      summary: Get a presigned URL to upload a receipt photo
+      security:
+        - oauth2: [claims:submit]
+      responses:
+        '200':
+          description: A presigned S3 upload URL and the new receipt's id
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UploadUrlResponse' }
+  /me/claims/{claimId}/receipts/{receiptId}/view-url:
+    parameters:
+      - name: claimId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: receiptId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      operationId: getReceiptViewUrl
+      summary: Get a presigned URL to view a receipt photo
+      security:
+        - oauth2: [claims:read]
+      responses:
+        '200':
+          description: A presigned S3 view URL
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ViewUrlResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /me/team/claims:
+    get:
+      operationId: listTeamClaims
+      summary: Claims submitted by the caller's direct reports
+      security:
+        - oauth2: [claims:read-team]
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20, maximum: 100 }
+        - name: offset
+          in: query
+          schema: { type: integer, default: 0 }
+        - name: status
+          in: query
+          schema: { type: string, enum: [pending, approved, rejected] }
+      responses:
+        '200':
+          description: A page of the direct reports' claims
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, data]
+                properties:
+                  count: { type: integer, description: total matching items }
+                  next: { type: string, nullable: true, description: relative URI of the next page }
+                  previous: { type: string, nullable: true, description: relative URI of the previous page }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/ExpenseClaim' }
+  /me/team/claims/{claimId}/approve:
+    parameters:
+      - name: claimId
+        in: path
+        required: true
+        schema: { type: string }
+    post:
+      operationId: approveTeamClaim
+      summary: Approve a direct report's submitted claim
+      security:
+        - oauth2: [claims:approve]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ClaimDecision' }
+      responses:
+        '200':
+          description: Approved claim
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExpenseClaim' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /me/team/claims/{claimId}/reject:
+    parameters:
+      - name: claimId
+        in: path
+        required: true
+        schema: { type: string }
+    post:
+      operationId: rejectTeamClaim
+      summary: Reject a direct report's submitted claim
+      security:
+        - oauth2: [claims:reject]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ClaimDecision' }
+      responses:
+        '200':
+          description: Rejected claim
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExpenseClaim' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
