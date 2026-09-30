@@ -48,6 +48,12 @@ communicate a budget.
 10. As an Employee, I want to see my team's current weekly spending limit
 when I'm submitting a claim, so that I know whether I'm about to go over
 budget.
+11. As an Employee, I want to see when a claim I've submitted breaks the
+meals spending policy, with a plain-language reason, so that I understand
+why it's flagged.
+12. As a Manager, I want to see when a direct report's claim breaks the
+meals spending policy, with a plain-language reason, so that I can factor
+it into my review.
 
 ## Product Decisions
 
@@ -66,7 +72,7 @@ employee's manager, who approves or rejects it. There is no second
 Actual payout happens outside the app (e.g. via payroll); the app does not
 integrate a payments capability.
 - Currency: claims are recorded in a single, organization-wide currency
-(USD).
+(LKR).
 - Expense categories: claims are categorized from a fixed set (Travel, Meals,
 Accommodation, Office Supplies, Other).
 - Claim editing: an employee may edit or withdraw a claim only while it is
@@ -74,10 +80,19 @@ still pending; once approved or rejected it is locked.
 - Manager visibility: a manager sees only claims submitted by their own
 direct reports, not the whole organization.
 - Weekly spending limit: a manager expresses one overall weekly limit for
-their whole team in natural language (e.g. "cap spending at $500 a week"),
-parsed by an agent into a stored number. It applies team-wide (not per
-employee, not per category). It is informational only — an employee sees the
-limit when submitting a claim, but going over it does not block submission.
+their whole team in natural language (e.g. "cap spending at 500 LKR a
+week"), parsed by an agent into a stored number. It applies team-wide (not
+per employee, not per category). It is informational only — an employee sees
+the limit when submitting a claim, but going over it does not block
+submission.
+- Meals spending policy: a fixed, system-wide policy caps Meals-category
+spending at 5,000 LKR per calendar day, checked cumulatively across all of
+an employee's Meals claims dated that day. A claim that breaks it is flagged
+with a plain-language reason, visible to both the employee (on the claim)
+and the manager (in the approval queue and claim detail). The policy is
+built in, not manager-configurable, and — like the weekly limit — it is
+informational only: a flagged claim can still be submitted and reviewed
+normally.
 
 ## Out of Scope
 
@@ -85,8 +100,11 @@ limit when submitting a claim, but going over it does not block submission.
 - A second (Finance/Admin) approval tier or any policy-compliance check step.
 - Multi-currency support or currency conversion.
 - Automated policy enforcement — blocking or restricting a submission for
-exceeding the weekly limit, per-category limits, or any other budget cap.
-The weekly limit is shown for information only.
+exceeding the weekly limit, the daily meals cap, or any other budget cap. An
+over-limit or policy-breaking claim is flagged with a reason but can still
+be submitted and reviewed normally.
+- Any policy check beyond the daily Meals cap — no alcohol restriction, no
+per-category limits beyond Meals, no manager-configurable policy rules.
 - Integration with payroll or accounting systems.
 - Notifying employees or managers of claim status changes, by any channel
 (email, SMS, or in-app) — everyone checks claim status by visiting the app

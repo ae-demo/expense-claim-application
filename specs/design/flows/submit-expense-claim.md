@@ -18,9 +18,10 @@ sequenceDiagram
     expense-webapp->>expense-api: request receipt upload URL
     expense-api-->>expense-webapp: presigned S3 URL
     expense-webapp->>expense-api: create claim (fields, receipt ref)
+    expense-api->>expense-api: check daily Meals policy (cumulative)
     alt missing required field
         expense-api-->>expense-webapp: refused
     else
-        expense-api-->>expense-webapp: created (pending)
+        expense-api-->>expense-webapp: created (pending, policy flag if broken)
     end
 ```
