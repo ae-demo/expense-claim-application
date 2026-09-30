@@ -59,9 +59,9 @@ it into my review.
 
 - Sign-in: every user signs in via SSO through Thunder, the platform IDP (org
 default).
-- Receipt storage: receipt photos are stored using the organization's
-registered object storage capability (`aws-s3`) via presigned upload/view
-URLs (org default, given).
+- Receipt storage: receipt photos are stored directly in the application's
+own database, alongside the claim — no external object storage service is
+used.
 - Receipt data extraction: an agent reads each uploaded receipt photo and
 pre-fills amount, date, vendor and category on the claim; the employee
 reviews and corrects the result before submitting.

@@ -15,8 +15,8 @@ sequenceDiagram
     receipt-agent-->>expense-webapp: amount, date, vendor, category
     Employee->>expense-webapp: review and correct fields
     Employee->>expense-webapp: submit claim
-    expense-webapp->>expense-api: request receipt upload URL
-    expense-api-->>expense-webapp: presigned S3 URL
+    expense-webapp->>expense-api: upload receipt photo
+    expense-api-->>expense-webapp: stored receipt id
     expense-webapp->>expense-api: create claim (fields, receipt ref)
     expense-api->>expense-api: check daily Meals policy (cumulative)
     alt missing required field
