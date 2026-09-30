@@ -7,7 +7,7 @@
       "criteria": ["story-2"],
       "brief": {
         "goal": "Extract the details off my lunch receipt photo so I can file my expense claim.",
-        "facts": { "amount": "42.50", "vendor": "Riverside Bistro", "expenseDate": "2026-09-12", "category": "Meals" },
+        "facts": { "amount": "4250.00", "vendor": "Riverside Bistro", "expenseDate": "2026-09-12", "category": "Meals" },
         "withholds": []
       },
       "rubric": {
@@ -17,7 +17,7 @@
         ],
         "mustNot": [
           { "id": "MN-1", "mustNot": "Submits, approves, or rejects a claim" },
-          { "id": "MN-2", "mustNot": "States a currency other than USD" }
+          { "id": "MN-2", "mustNot": "States a currency other than LKR" }
         ]
       }
     },

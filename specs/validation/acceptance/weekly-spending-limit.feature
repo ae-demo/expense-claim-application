@@ -5,21 +5,21 @@ Feature: Weekly team spending limit
 
     Scenario: Setting the team's weekly limit conversationally
       Given Priya the manager has no weekly limit set for her team
-      When Priya tells the assistant to cap her team's spending at "$500 a week"
-      Then her team's weekly limit is set to "500.00"
+      When Priya tells the assistant to cap her team's spending at "5000 LKR a week"
+      Then her team's weekly limit is set to "5000.00" LKR
 
     Scenario: Replacing an existing weekly limit
-      Given Priya the manager's team has a weekly limit of "500.00"
-      When Priya tells the assistant to change her team's weekly limit to "650 a week"
-      Then her team's weekly limit is set to "650.00"
+      Given Priya the manager's team has a weekly limit of "5000.00" LKR
+      When Priya tells the assistant to change her team's weekly limit to "6500 a week"
+      Then her team's weekly limit is set to "6500.00" LKR
 
   @story-10
   Rule: An employee sees their team's current weekly spending limit when submitting a claim
 
     Scenario: The limit is visible while filing a claim
-      Given Dana the employee's team has a weekly limit of "500.00"
+      Given Dana the employee's team has a weekly limit of "5000.00" LKR
       When Dana starts submitting a new expense claim
-      Then she sees her team's weekly limit of "500.00"
+      Then she sees her team's weekly limit of "5000.00" LKR
 
     @negative
     Scenario: No limit has been set yet

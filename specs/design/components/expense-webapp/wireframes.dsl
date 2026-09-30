@@ -5,16 +5,16 @@ screen MyClaims "An employee's submitted expense claims and their status"
     heading "My Claims"
     right
     button "New Claim" primary -> UploadReceipt
-  table "Vendor | Category | Amount | Date | Status"
-    row "Riverside Bistro | Meals | $42.50 | 2026-09-12 | Pending -> ClaimDetail"
-    row "Office Depot | Office Supplies | $18.20 | 2026-09-05 | Approved -> ClaimDetail"
-    row "Acme Airlines | Travel | $310.00 | 2026-08-28 | Rejected -> ClaimDetail"
+  table "Vendor | Category | Amount | Date | Status | Policy"
+    row "Riverside Bistro | Meals | LKR 4,250.00 | 2026-09-12 | Pending -> ClaimDetail | -"
+    row "Office Depot | Office Supplies | LKR 1,820.00 | 2026-09-05 | Approved -> ClaimDetail | -"
+    row "Acme Airlines | Travel | LKR 31,000.00 | 2026-08-28 | Rejected -> ClaimDetail | -"
 
 screen UploadReceipt "Upload a receipt photo to start a new claim"
   navbar "Expense Claims"
   sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue"
   heading "Upload Receipt"
-  card "Team weekly limit | $500.00 | so far this week"
+  card "Team weekly limit | LKR 50,000.00 | so far this week"
   text "Upload a photo of your receipt and we'll read the details for you"
   image "Receipt photo"
   row
@@ -36,15 +36,18 @@ screen ReviewClaim "Review and correct the auto-extracted receipt details before
     button "Cancel" -> MyClaims
     button "Submit Claim" primary -> MyClaims
 
-screen ClaimDetail "One claim's full details, editable while pending"
+screen ClaimDetail "One claim's full details, editable while pending, with any policy flag"
   navbar "Expense Claims"
   sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue"
   heading "Claim Detail"
-  badge "Pending" warning
+  row
+    badge "Pending" warning
+    badge "Over daily Meals policy" danger
   text "Vendor: Riverside Bistro"
   text "Category: Meals"
-  text "Amount: $42.50"
+  text "Amount: LKR 4,250.00"
   text "Expense Date: 2026-09-12"
+  text "Today's Meals claims total LKR 5,900.00, over the 5,000 LKR daily limit"
   image "Receipt photo"
   row
     right
@@ -55,18 +58,20 @@ screen ApprovalQueue "A manager's queue of claims submitted by their direct repo
   navbar "Expense Claims"
   sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue | Team Limit -> SetWeeklyLimit"
   heading "Approval Queue"
-  table "Employee | Vendor | Category | Amount | Status" -> ApprovalDetail
-    row "Dana Lee | Riverside Bistro | Meals | $42.50 | Pending"
-    row "Sam Ortiz | Acme Airlines | Travel | $310.00 | Pending"
+  table "Employee | Vendor | Category | Amount | Status | Policy" -> ApprovalDetail
+    row "Dana Lee | Riverside Bistro | Meals | LKR 4,250.00 | Pending | Flagged"
+    row "Sam Ortiz | Acme Airlines | Travel | LKR 31,000.00 | Pending | -"
 
-screen ApprovalDetail "A manager approves or rejects one direct report's claim, with a comment"
+screen ApprovalDetail "A manager approves or rejects one direct report's claim, with a comment and any policy flag"
   navbar "Expense Claims"
   sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue | Team Limit -> SetWeeklyLimit"
   heading "Claim from Dana Lee"
+  badge "Over daily Meals policy" danger
   text "Vendor: Riverside Bistro"
   text "Category: Meals"
-  text "Amount: $42.50"
+  text "Amount: LKR 4,250.00"
   text "Expense Date: 2026-09-12"
+  text "Today's Meals claims total LKR 5,900.00, over the 5,000 LKR daily limit"
   image "Receipt photo"
   textarea "Comment"
   row
@@ -78,8 +83,8 @@ screen SetWeeklyLimit "A manager tells the assistant their team's weekly spendin
   navbar "Expense Claims"
   sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue | Team Limit -> SetWeeklyLimit"
   heading "Team Weekly Limit"
-  card "Current limit | $500.00 | set last Monday"
-  list "Priya: cap spending at $500 a week | Assistant: Got it — your team's weekly limit is now $500.00"
+  card "Current limit | LKR 50,000.00 | set last Monday"
+  list "Priya: cap spending at 50,000 LKR a week | Assistant: Got it — your team's weekly limit is now LKR 50,000.00"
   row
     input "Tell the assistant your team's new weekly limit"
     button "Send" primary // sends the chat message; stays on this screen

@@ -30,14 +30,14 @@
     {
       "name": "Employee",
       "description": "Submits expense claims with receipts, and tracks, edits or withdraws their own pending claims.",
-      "stories": [1, 2, 3, 4, 5, 6, 10],
+      "stories": [1, 2, 3, 4, 5, 6, 10, 11],
       "grants": ["claims:read", "claims:submit", "claims:edit", "claims:withdraw", "weekly-limits:read"],
       "assignTo": ["Employees"]
     },
     {
       "name": "Manager",
       "description": "Reviews expense claims submitted by their direct reports, approves or rejects each with a comment, and sets their team's weekly spending limit.",
-      "stories": [7, 8, 9],
+      "stories": [7, 8, 9, 12],
       "grants": ["claims:read-team", "claims:approve", "claims:reject", "weekly-limits:read", "weekly-limits:set"],
       "assignTo": ["Managers"]
     }

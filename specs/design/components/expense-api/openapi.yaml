@@ -38,13 +38,15 @@ components:
         employeeId: { type: string }
         category: { type: string, enum: [Travel, Meals, Accommodation, Office Supplies, Other] }
         amount: { type: number, format: double }
-        currency: { type: string, enum: [USD] }
+        currency: { type: string, enum: [LKR] }
         expenseDate: { type: string, format: date }
         vendor: { type: string }
         status: { type: string, enum: [pending, approved, rejected] }
         reviewerComment: { type: string, nullable: true }
         submittedAt: { type: string, format: date-time }
         reviewedAt: { type: string, format: date-time, nullable: true }
+        policyViolated: { type: boolean, description: true when this claim breaks the daily Meals policy }
+        policyReason: { type: string, nullable: true, description: plain-language reason, set only when policyViolated is true }
         receipts:
           type: array
           items: { $ref: '#/components/schemas/Receipt' }
@@ -62,7 +64,7 @@ components:
       properties:
         category: { type: string, enum: [Travel, Meals, Accommodation, Office Supplies, Other] }
         amount: { type: number, format: double }
-        currency: { type: string, enum: [USD] }
+        currency: { type: string, enum: [LKR] }
         expenseDate: { type: string, format: date }
         vendor: { type: string }
         receiptIds:
@@ -95,7 +97,7 @@ components:
       type: object
       properties:
         amount: { type: number, format: double, nullable: true, description: null when no limit has been set yet }
-        currency: { type: string, enum: [USD] }
+        currency: { type: string, enum: [LKR] }
         setAt: { type: string, format: date-time, nullable: true }
     WeeklyLimitSet:
       type: object
@@ -149,7 +151,7 @@ paths:
                     items: { $ref: '#/components/schemas/ExpenseClaim' }
     post:
       operationId: submitExpenseClaim
-      summary: Submit a new expense claim
+      summary: Submit a new expense claim (checks the daily Meals policy and flags it)
       security:
         - oauth2: [claims:submit]
       requestBody:

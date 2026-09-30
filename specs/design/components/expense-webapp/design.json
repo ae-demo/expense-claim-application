@@ -13,7 +13,7 @@
     { "kind": "component", "name": "limit-agent" },
     { "kind": "platform-resource", "name": "thunder-auth", "resourceType": "thunder-app" }
   ],
-  "description": "The Employee and Manager web app: submitting expense claims with receipt photos (auto-extracted via receipt-agent), tracking and editing/withdrawing pending claims, claim history, the Manager's approval queue, and a chat screen where a Manager sets the team's weekly limit in plain language via limit-agent, with that limit shown to Employees while they submit a claim. Holds no business data itself — everything is read/written through expense-api, receipt-agent and limit-agent.",
-  "stories": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  "description": "The Employee and Manager web app: submitting expense claims with receipt photos (auto-extracted via receipt-agent), tracking and editing/withdrawing pending claims, claim history, the Manager's approval queue, a chat screen where a Manager sets the team's weekly limit in plain language via limit-agent (with that limit shown to Employees while they submit a claim), and a policy-violation flag with its plain-language reason shown to both Employee and Manager on any flagged claim. Holds no business data itself — everything is read/written through expense-api, receipt-agent and limit-agent.",
+  "stories": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   "skillsPinned": ["wireframes", "react-webapp", "oxygen-ui-design-system", "thunder-authentication"]
 }

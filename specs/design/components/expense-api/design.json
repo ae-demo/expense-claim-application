@@ -12,7 +12,7 @@
     { "kind": "platform-resource", "name": "expense-claims-db", "resourceType": "postgres-cnpg" },
     { "kind": "external", "name": "aws-s3", "description": "Generates presigned upload/view URLs so receipt photos go directly to S3." }
   ],
-  "description": "Owns expense claims and receipts: claim CRUD, employee submission, manager approval/rejection, presigned S3 URLs for receipt upload/view, and the team's weekly spending limit (read and set). Does not extract receipt data itself (the receipt-agent does), does not parse natural language into a limit itself (the limit-agent does), does not enforce the limit against a submission, and does not process reimbursement payment.",
-  "stories": [1, 3, 4, 5, 6, 7, 8, 9, 10],
+  "description": "Owns expense claims and receipts: claim CRUD, employee submission, manager approval/rejection, presigned S3 URLs for receipt upload/view, the team's weekly spending limit (read and set), and the fixed daily Meals policy check (5,000 LKR/day, cumulative) computed and flagged with a plain-language reason at submission time. Does not extract receipt data itself (the receipt-agent does), does not parse natural language into a limit itself (the limit-agent does), does not enforce the weekly limit or the Meals policy against a submission (both are flagged, never blocking), and does not process reimbursement payment.",
+  "stories": [1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   "skillsPinned": ["openapi-conventions", "ballerina", "thunder-authentication", "api-management"]
 }

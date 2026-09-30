@@ -4,7 +4,7 @@ Feature: Submitting and tracking expense claims
   Rule: An employee can submit an expense claim with one or more receipt photos
 
     Scenario: Submitting a claim with a receipt
-      Given Dana the employee has a receipt photo from "Riverside Bistro" for "42.50"
+      Given Dana the employee has a receipt photo from "Riverside Bistro" for "4250.00" LKR
       When Dana submits an expense claim with that receipt photo
       Then the claim appears in Dana's claims with status "pending"
 
@@ -12,7 +12,7 @@ Feature: Submitting and tracking expense claims
   Rule: The amount, date, vendor and category are automatically read off the uploaded receipt photo
 
     Scenario: Auto-extracted fields appear before submission
-      Given Dana the employee has uploaded a receipt photo from "Riverside Bistro" for "42.50" dated "2026-09-12"
+      Given Dana the employee has uploaded a receipt photo from "Riverside Bistro" for "4250.00" LKR dated "2026-09-12"
       When Dana reaches the claim review step
       Then the amount, date, vendor and category fields are already filled in from the receipt
 
@@ -20,9 +20,9 @@ Feature: Submitting and tracking expense claims
   Rule: An employee can review and correct the auto-extracted details before submitting
 
     Scenario: Correcting a misread amount before submitting
-      Given the auto-extracted amount for Dana's receipt from "Riverside Bistro" reads "42.00"
-      When Dana corrects the amount to "42.50" and submits the claim
-      Then the claim is recorded with an amount of "42.50"
+      Given the auto-extracted amount for Dana's receipt from "Riverside Bistro" reads "4200.00" LKR
+      When Dana corrects the amount to "4250.00" LKR and submits the claim
+      Then the claim is recorded with an amount of "4250.00" LKR
 
   @story-4
   Rule: An employee can view the status of each claim they have submitted
@@ -36,9 +36,9 @@ Feature: Submitting and tracking expense claims
   Rule: An employee may edit or withdraw a claim only while it is still pending
 
     Scenario: Editing a pending claim
-      Given Dana the employee has a pending claim for "Riverside Bistro" with amount "42.50"
-      When Dana edits that claim's amount to "45.00"
-      Then the claim shows an amount of "45.00"
+      Given Dana the employee has a pending claim for "Riverside Bistro" with amount "4250.00" LKR
+      When Dana edits that claim's amount to "4500.00" LKR
+      Then the claim shows an amount of "4500.00" LKR
 
     Scenario: Withdrawing a pending claim
       Given Dana the employee has a pending claim for "Riverside Bistro"
