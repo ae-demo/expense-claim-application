@@ -4,6 +4,7 @@ component expense-webapp as "Expense Claims" web-application
 component expense-api as "Expense API" service
 component expense-claims-db as "Expense Claims DB" database
 component receipt-agent as "Receipt Extraction Agent" ai-agent
+component limit-agent as "Weekly Limit Agent" ai-agent
 
 east thunder-auth as "Thunder Auth" identity-server
 south aws-s3 as "Receipt Storage (S3)" service
@@ -12,6 +13,7 @@ north -> expense-webapp
 
 expense-webapp -> expense-api
 expense-webapp -> receipt-agent
+expense-webapp -> limit-agent
 expense-webapp -> thunder-auth
 
 expense-api -> thunder-auth
@@ -19,3 +21,6 @@ expense-api -> expense-claims-db
 expense-api -> aws-s3
 
 receipt-agent -> thunder-auth
+
+limit-agent -> expense-api
+limit-agent -> thunder-auth

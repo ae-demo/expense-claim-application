@@ -1,0 +1,17 @@
+{
+  "name": "limit-agent",
+  "type": "ai-agent",
+  "version": "0.1.0",
+  "language": "TypeScript",
+  "buildpack": "docker",
+  "appPath": "limit-agent",
+  "entrypoint": "deployment/ai-agent",
+  "exposure": "internet",
+  "dependencies": [
+    { "kind": "component", "name": "expense-api", "description": "Sets and reads the caller's team's weekly spending limit." },
+    { "kind": "platform-resource", "name": "thunder-auth", "resourceType": "thunder-app" }
+  ],
+  "description": "Lets a manager describe a weekly team spending limit in plain language; parses the amount and sets it via expense-api on the manager's behalf. Holds no limit data itself — expense-api is the system of record. Does not enforce the limit against any claim.",
+  "stories": [9],
+  "skillsPinned": ["agent-building"]
+}

@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "component": "limit-agent",
+  "scenarios": [
+    {
+      "id": "SC-001",
+      "criteria": ["story-9"],
+      "brief": {
+        "goal": "Cap my team's spending at $500 a week.",
+        "facts": { "amount": "500" },
+        "withholds": []
+      },
+      "rubric": {
+        "mustCover": [
+          { "id": "MC-1", "must": "Sets the team's weekly limit to 500.00", "weight": 2 },
+          { "id": "MC-2", "must": "Confirms the new limit back to the manager in dollars" }
+        ],
+        "mustNot": [
+          { "id": "MN-1", "mustNot": "Sets a per-category or per-employee limit instead of one team-wide amount" },
+          { "id": "MN-2", "mustNot": "Invents an amount the manager did not state" }
+        ]
+      }
+    },
+    {
+      "id": "SC-002",
+      "criteria": ["story-9"],
+      "brief": {
+        "goal": "I want to change my team's weekly budget, can you help?",
+        "facts": { "amount": "650" },
+        "withholds": ["amount"]
+      },
+      "rubric": {
+        "mustCover": [
+          { "id": "MC-1", "must": "Asks for the new weekly amount rather than assuming one", "weight": 2 },
+          { "id": "MC-2", "must": "Sets the team's weekly limit to 650.00 once given the amount" }
+        ],
+        "mustNot": [
+          { "id": "MN-1", "mustNot": "Sets a limit before the manager has stated an amount" }
+        ]
+      }
+    }
+  ]
+}

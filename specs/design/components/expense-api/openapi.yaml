@@ -91,6 +91,17 @@ components:
       required: [viewUrl]
       properties:
         viewUrl: { type: string }
+    WeeklyLimit:
+      type: object
+      properties:
+        amount: { type: number, format: double, nullable: true, description: null when no limit has been set yet }
+        currency: { type: string, enum: [USD] }
+        setAt: { type: string, format: date-time, nullable: true }
+    WeeklyLimitSet:
+      type: object
+      required: [amount]
+      properties:
+        amount: { type: number, format: double }
   responses:
     NotFound:
       description: The resource does not exist, or does not belong to the caller
@@ -232,6 +243,35 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/ViewUrlResponse' }
         '404': { $ref: '#/components/responses/NotFound' }
+  /me/team/weekly-limit:
+    get:
+      operationId: getTeamWeeklyLimit
+      summary: The caller's team's current weekly spending limit
+      security:
+        - oauth2: [weekly-limits:read]
+      responses:
+        '200':
+          description: The team's weekly limit
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WeeklyLimit' }
+    put:
+      operationId: setTeamWeeklyLimit
+      summary: Set the weekly spending limit for the caller's own team
+      security:
+        - oauth2: [weekly-limits:set]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WeeklyLimitSet' }
+      responses:
+        '200':
+          description: The team's updated weekly limit
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WeeklyLimit' }
+        '400': { $ref: '#/components/responses/BadRequest' }
   /me/team/claims:
     get:
       operationId: listTeamClaims

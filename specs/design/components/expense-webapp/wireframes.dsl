@@ -14,6 +14,7 @@ screen UploadReceipt "Upload a receipt photo to start a new claim"
   navbar "Expense Claims"
   sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue"
   heading "Upload Receipt"
+  card "Team weekly limit | $500.00 | so far this week"
   text "Upload a photo of your receipt and we'll read the details for you"
   image "Receipt photo"
   row
@@ -52,7 +53,7 @@ screen ClaimDetail "One claim's full details, editable while pending"
 
 screen ApprovalQueue "A manager's queue of claims submitted by their direct reports"
   navbar "Expense Claims"
-  sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue"
+  sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue | Team Limit -> SetWeeklyLimit"
   heading "Approval Queue"
   table "Employee | Vendor | Category | Amount | Status" -> ApprovalDetail
     row "Dana Lee | Riverside Bistro | Meals | $42.50 | Pending"
@@ -60,7 +61,7 @@ screen ApprovalQueue "A manager's queue of claims submitted by their direct repo
 
 screen ApprovalDetail "A manager approves or rejects one direct report's claim, with a comment"
   navbar "Expense Claims"
-  sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue"
+  sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue | Team Limit -> SetWeeklyLimit"
   heading "Claim from Dana Lee"
   text "Vendor: Riverside Bistro"
   text "Category: Meals"
@@ -72,6 +73,16 @@ screen ApprovalDetail "A manager approves or rejects one direct report's claim, 
     right
     button "Reject" danger -> ApprovalQueue
     button "Approve" primary -> ApprovalQueue
+
+screen SetWeeklyLimit "A manager tells the assistant their team's weekly spending limit in plain language"
+  navbar "Expense Claims"
+  sidebar "My Claims -> MyClaims | New Claim -> UploadReceipt | Approvals -> ApprovalQueue | Team Limit -> SetWeeklyLimit"
+  heading "Team Weekly Limit"
+  card "Current limit | $500.00 | set last Monday"
+  list "Priya: cap spending at $500 a week | Assistant: Got it — your team's weekly limit is now $500.00"
+  row
+    input "Tell the assistant your team's new weekly limit"
+    button "Send" primary // sends the chat message; stays on this screen
 
 flow "File a claim"
   role "Employee"
@@ -86,3 +97,4 @@ flow "Approval queue"
   description "A manager reviews and decides on their direct reports' submitted claims"
   ApprovalQueue
   ApprovalDetail
+  SetWeeklyLimit

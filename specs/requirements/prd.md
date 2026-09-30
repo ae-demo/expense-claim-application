@@ -42,6 +42,12 @@ can track my own spending over time.
 direct reports, so that I know what's waiting on my review.
 8. As a Manager, I want to approve or reject a claim with a comment, so that
 the employee understands the decision.
+9. As a Manager, I want to set a weekly spending limit for my team by
+describing it in plain language, so that I don't have to learn a form to
+communicate a budget.
+10. As an Employee, I want to see my team's current weekly spending limit
+when I'm submitting a claim, so that I know whether I'm about to go over
+budget.
 
 ## Product Decisions
 
@@ -67,14 +73,20 @@ Accommodation, Office Supplies, Other).
 still pending; once approved or rejected it is locked.
 - Manager visibility: a manager sees only claims submitted by their own
 direct reports, not the whole organization.
+- Weekly spending limit: a manager expresses one overall weekly limit for
+their whole team in natural language (e.g. "cap spending at $500 a week"),
+parsed by an agent into a stored number. It applies team-wide (not per
+employee, not per category). It is informational only — an employee sees the
+limit when submitting a claim, but going over it does not block submission.
 
 ## Out of Scope
 
 - Processing or automating the actual reimbursement payment/payout.
 - A second (Finance/Admin) approval tier or any policy-compliance check step.
 - Multi-currency support or currency conversion.
-- Expense policy enforcement (e.g. per-category spending limits, budget
-caps).
+- Automated policy enforcement — blocking or restricting a submission for
+exceeding the weekly limit, per-category limits, or any other budget cap.
+The weekly limit is shown for information only.
 - Integration with payroll or accounting systems.
 - Notifying employees or managers of claim status changes, by any channel
 (email, SMS, or in-app) — everyone checks claim status by visiting the app
