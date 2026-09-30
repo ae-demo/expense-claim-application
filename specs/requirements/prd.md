@@ -38,14 +38,10 @@ that I know whether it's pending, approved, or rejected.
 pending, so that I can fix a mistake or cancel it before it's reviewed.
 6. As an Employee, I want to see a history of all my past claims, so that I
 can track my own spending over time.
-7. As an Employee, I want to be notified when a claim's status changes, so
-that I know the outcome without having to check manually.
-8. As a Manager, I want to see a queue of expense claims submitted by my
+7. As a Manager, I want to see a queue of expense claims submitted by my
 direct reports, so that I know what's waiting on my review.
-9. As a Manager, I want to approve or reject a claim with a comment, so that
+8. As a Manager, I want to approve or reject a claim with a comment, so that
 the employee understands the decision.
-10. As a Manager, I want to be notified when a new claim needs my approval, so
-that I can act on it promptly.
 
 ## Product Decisions
 
@@ -54,9 +50,6 @@ default).
 - Receipt storage: receipt photos are stored using the organization's
 registered object storage capability (`aws-s3`) via presigned upload/view
 URLs (org default, given).
-- Notifications: status-change and new-claim-for-approval notifications are
-sent by the organization's registered transactional email capability
-(`email-service`) (org default, given).
 - Receipt data extraction: an agent reads each uploaded receipt photo and
 pre-fills amount, date, vendor and category on the claim; the employee
 reviews and corrects the result before submitting.
@@ -74,8 +67,6 @@ Accommodation, Office Supplies, Other).
 still pending; once approved or rejected it is locked.
 - Manager visibility: a manager sees only claims submitted by their own
 direct reports, not the whole organization.
-- Notification channel: notifications are sent by email only (not SMS).  
-*assumed*
 
 ## Out of Scope
 
@@ -85,7 +76,9 @@ direct reports, not the whole organization.
 - Expense policy enforcement (e.g. per-category spending limits, budget
 caps).
 - Integration with payroll or accounting systems.
-- SMS notifications.
+- Notifying employees or managers of claim status changes, by any channel
+(email, SMS, or in-app) — everyone checks claim status by visiting the app
+themselves.
 
 ## Open Questions
 
